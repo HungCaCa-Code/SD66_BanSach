@@ -1,0 +1,33 @@
+package org.example.datn.service;
+
+import org.example.datn.entity.DonHang;
+import org.example.datn.entity.ThanhToan;
+import org.example.datn.repository.ThanhToanRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
+
+@Service
+public class ThanhToanService {
+
+    @Autowired
+    private ThanhToanRepository thanhToanRepository;
+
+    /**
+     * Tự động tạo một giao dịch "Tiền mặt" (COD) khi đơn hàng hoàn thành.
+     * @param donHang Đơn hàng vừa được chuyển sang 'HOAN_THANH'
+     */
+    @Transactional
+    public void createCodPayment(DonHang donHang) {
+        ThanhToan payment = new ThanhToan();
+        payment.setDonHang(donHang);
+        payment.setPhuongThuc("TIEN_MAT"); //
+        payment.setNgayThanhToan(LocalDateTime.now());
+        payment.setSoTien(donHang.getTongTien()); //
+        payment.setTrangThai("THANH_CONG"); //
+
+        thanhToanRepository.save(payment);
+    }
+}

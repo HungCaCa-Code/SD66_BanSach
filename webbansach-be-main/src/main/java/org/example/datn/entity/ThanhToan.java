@@ -1,0 +1,41 @@
+package org.example.datn.entity;
+
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.Nationalized;
+
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+
+@Getter
+@Setter
+@Entity
+@Table(name = "Thanh_Toan")
+public class ThanhToan {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_thanh_toan", nullable = false)
+    private Integer id;
+
+    @OneToOne
+    @JoinColumn(name = "id_don_hang", nullable = false, unique = true)
+    private DonHang donHang;
+
+    @Nationalized
+    @Column(name = "phuong_thuc", length = 20)
+    private String phuongThuc; // (TIEN_MAT, VNPAY, ...)
+
+    @ColumnDefault("getdate()")
+    @Column(name = "ngay_thanh_toan")
+    private LocalDateTime ngayThanhToan;
+
+    @Column(name = "so_tien", precision = 12, scale = 2)
+    private BigDecimal soTien;
+
+    @Nationalized
+    @ColumnDefault("'THANH_CONG'")
+    @Column(name = "trang_thai", length = 20)
+    private String trangThai;
+}
